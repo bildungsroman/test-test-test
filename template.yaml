@@ -47,21 +47,6 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-  dotnetFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-dotnetgorubyFunction
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: dotnetFunction
-      CodeUri: src/dotnetFunction
-      Handler: StackeryFunction::StackeryFunction.Handler::handler
-      Runtime: dotnetcore2.1
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
   pyFun:
     Type: AWS::Serverless::Function
     Properties:
@@ -80,13 +65,28 @@ Resources:
   rubyFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-rubyFunction
+      FunctionName: !Sub ${AWS::StackName}-rubybetterDotFunction
       Description: !Sub
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
         - ResourceName: rubyFunction
       CodeUri: src/rubyFunction
       Handler: function.handler
       Runtime: ruby2.5
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+  betterDotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-betterDotFunction
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: betterDotFunction
+      CodeUri: src/betterDotFunction
+      Handler: StackeryFunction::StackeryFunction.Handler::handler
+      Runtime: dotnetcore2.1
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
