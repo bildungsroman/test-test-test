@@ -4,7 +4,7 @@ Resources:
   AwesomeNewFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-AwesomeNewFunction
+      FunctionName: !Sub ${AWS::StackName}-AwesomeNewdotnetFunctio
       Description: !Sub
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
         - ResourceName: AwesomeNewFunction
@@ -20,7 +20,7 @@ Resources:
     Type: Custom::StackeryEdgeFunction
     Properties:
       ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stackery-agent-commander
-      FunctionName: !Sub ${AWS::StackName}-AwesomeEdgeFunction
+      FunctionName: !Sub ${AWS::StackName}-AwesomeEdgedotnetFuncti
       Description: !Sub
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
         - ResourceName: AwesomeEdgeFunction
@@ -34,7 +34,7 @@ Resources:
   AwesomeEdgeFunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${AWS::StackName}-AwesomeEdgeFunction
+      RoleName: !Sub ${AWS::StackName}-AwesomeEdgedotnetFuncti
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -47,6 +47,66 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+  dotnetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-dotnetgorubyFunction
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: dotnetFunction
+      CodeUri: src/dotnetFunction
+      Handler: StackeryFunction::StackeryFunction.Handler::handler
+      Runtime: dotnetcore2.1
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+  pyFun:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-pyFun
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: pyFun
+      CodeUri: src/pyFun
+      Handler: handler.handler
+      Runtime: python3.7
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+  goFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-gorubyFunction
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: goFunction
+      CodeUri: src/goFunction
+      Handler: main
+      Runtime: go1.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+  rubyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-rubyFunction
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: rubyFunction
+      CodeUri: src/rubyFunction
+      Handler: function.handler
+      Runtime: ruby2.5
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
 Parameters:
   StackTagName:
     Type: String
