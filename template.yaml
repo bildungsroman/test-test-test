@@ -80,11 +80,26 @@ Resources:
   newBEDotFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-newBEDotFunction
+      FunctionName: !Sub ${AWS::StackName}-newBEDotoldBEDotFunctio
       Description: !Sub
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
         - ResourceName: newBEDotFunction
       CodeUri: src/newBEDotFunction
+      Handler: StackeryFunction::StackeryFunction.Handler::handler
+      Runtime: dotnetcore2.1
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+  oldBEDotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-oldBEDotFunction
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: oldBEDotFunction
+      CodeUri: src/oldBEDotFunction
       Handler: StackeryFunction::StackeryFunction.Handler::handler
       Runtime: dotnetcore2.1
       MemorySize: 3008
