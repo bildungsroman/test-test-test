@@ -77,6 +77,21 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+  newBEDotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-newBEDotFunction
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: newBEDotFunction
+      CodeUri: src/newBEDotFunction
+      Handler: StackeryFunction::StackeryFunction.Handler::handler
+      Runtime: dotnetcore2.1
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
 Parameters:
   StackTagName:
     Type: String
