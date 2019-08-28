@@ -92,6 +92,23 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+  FunctionPro:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-FunctionPro
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: FunctionPro
+      CodeUri: src/FunctionPro
+      Handler: index
+      Runtime: provided
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+      Layers:
+        - layer
 Parameters:
   StackTagName:
     Type: String
