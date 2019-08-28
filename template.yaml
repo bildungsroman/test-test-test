@@ -77,36 +77,6 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
-  betterDotFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-betterDotoneMoreDotFunc
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: betterDotFunction
-      CodeUri: src/betterDotFunction
-      Handler: StackeryFunction::StackeryFunction.Handler::handler
-      Runtime: dotnetcore2.1
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-  oneMoreDotFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-oneMoreDotFunction
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: oneMoreDotFunction
-      CodeUri: src/oneMoreDotFunction
-      Handler: StackeryFunction::StackeryFunction.Handler::handler
-      Runtime: dotnetcore2.1
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
 Parameters:
   StackTagName:
     Type: String
