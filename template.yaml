@@ -1,41 +1,39 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Metadata:
-  StackeryEnvConfigParameters:
+  EnvConfigParameters:
     StackeryEnvConfigdbrootPassword: db.rootPassword
 Parameters:
-  DefaultVPCId:
-    Type: AWS::EC2::VPC::Id
-    Description: Default VPC Id
-  DefaultVPCSubnets:
-    Type: String
-    Description: Default VPC Subnets
   StackeryEnvConfigdbrootPassword:
     Type: AWS::SSM::Parameter::Value<String>
-    Default: /Stackery/Environments/<StackeryEnvId>/Config/db/rootPassword
+    Default: /<EnvironmentName>/db/rootPassword
+  StackeryStackTagName:
+    Type: String
+    Description: Stack Name (injected by Stackery at deployment time)
+  StackeryEnvironmentTagName:
+    Type: String
+    Description: Environment Name (injected by Stackery at deployment time)
 Resources:
   Database:
-    Type: AWS::RDS::DBInstance
+    Type: AWS::RDS::DBCluster
     Properties:
-      AllocatedStorage: '10'
-      AllowMajorVersionUpgrade: true
-      AutoMinorVersionUpgrade: true
-      BackupRetentionPeriod: '30'
-      CopyTagsToSnapshot: true
-      DBInstanceClass: db.t2.medium
+      BackupRetentionPeriod: 30
       DBSubnetGroupName: !Ref DatabaseSubnetGroup
-      Engine: mysql
-      EngineVersion: '8.0'
+      Engine: aurora
       MasterUserPassword: !Ref StackeryEnvConfigdbrootPassword
       MasterUsername: root
-      PubliclyAccessible: false
-      StorageType: gp2
       Tags:
         - Key: Name
           Value: !Sub
             - Stackery Stack ${StackeryStackTagName} Environment ${StackeryEnvironmentTagName} Database ${ResourceName}
             - ResourceName: Database
-      VPCSecurityGroups:
+      EngineMode: serverless
+      ScalingConfiguration:
+        AutoPause: false
+        MinCapacity: 2
+        MaxCapacity: 256
+      StorageEncrypted: true
+      VpcSecurityGroupIds:
         - !Ref DatabaseSecurityGroup
   DatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
