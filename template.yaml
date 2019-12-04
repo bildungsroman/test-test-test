@@ -40,17 +40,17 @@ Resources:
   ApiSSLCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: api.example.com
+      DomainName: domain435683495034.stackery-stacks.io
       DomainValidationOptions: !If
         - ApiCustomDomain
-        - - DomainName: api.example.com
-            ValidationDomain: api.example.com
+        - - DomainName: domain435683495034.stackery-stacks.io
+            ValidationDomain: stackery-stacks.io
         - !Ref AWS::NoValue
     Condition: ApiCustomDomain
   ApiCustomDomain:
     Type: AWS::ApiGateway::DomainName
     Properties:
-      DomainName: api.example.com
+      DomainName: domain435683495034.stackery-stacks.io
       EndpointConfiguration:
         Types:
           - REGIONAL
@@ -112,4 +112,4 @@ Conditions:
   ApiCustomDomain: !Not
     - !Equals
       - 'false'
-      - api.example.com
+      - domain435683495034.stackery-stacks.io
