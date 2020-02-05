@@ -79,6 +79,8 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+        - S3CrudPolicy:
+            BucketName: !Ref Bucket
       Events:
         ApiGET:
           Type: Api
@@ -87,7 +89,9 @@ Resources:
             Method: GET
             RestApiId: !Ref Api
       Environment:
-        Variables: {}
+        Variables:
+          BUCKET_NAME: !Ref Bucket
+          BUCKET_ARN: !GetAtt Bucket.Arn
   tsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -103,6 +107,8 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+        - S3CrudPolicy:
+            BucketName: !Ref Bucket
       Events:
         ApiPOST:
           Type: Api
@@ -110,8 +116,16 @@ Resources:
             Path: /
             Method: POST
             RestApiId: !Ref Api
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref Bucket
+          BUCKET_ARN: !GetAtt Bucket.Arn
     Metadata:
       RuntimeOption: typescript
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-bucket-${AWS::AccountId}
 Conditions:
   ApiCustomDomain: !Not
     - !Equals
