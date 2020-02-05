@@ -10,6 +10,9 @@ Parameters:
   EnvironmentAPIGatewayStageName:
     Type: String
     Description: Environment name used for API Gateway Stage names (injected by Stackery at deployment time)
+  EnvConfigdbPasswordAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/dbPassword
 Resources:
   Api:
     Type: AWS::Serverless::Api
@@ -86,6 +89,9 @@ Resources:
             Path: /
             Method: GET
             RestApiId: !Ref Api
+      Environment:
+        Variables:
+          DB_PASSWORD: !Ref EnvConfigdbPasswordAsString
   AnotherFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -108,57 +114,11 @@ Resources:
             Path: /
             Method: POST
             RestApiId: !Ref Api
-  tsNode12:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-tsNode12
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: tsNode12
-      CodeUri: src/tsNode12
-      Handler: index.handler
-      Runtime: nodejs12.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-    Metadata:
-      RuntimeOption: typescript
-  tsNode10:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-tsNode10
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: tsNode10
-      CodeUri: src/tsNode10
-      Handler: index.handler
-      Runtime: nodejs10.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-    Metadata:
-      RuntimeOption: typescript
-  notTs:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-notTs
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: notTs
-      CodeUri: src/notTs
-      Handler: index.handler
-      Runtime: nodejs12.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
 Conditions:
   ApiCustomDomain: !Not
     - !Equals
       - 'false'
       - domain435683495034.stackery-stacks.io
+Metadata:
+  EnvConfigParameters:
+    EnvConfigdbPasswordAsString: dbPassword
