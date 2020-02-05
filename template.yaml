@@ -10,9 +10,6 @@ Parameters:
   EnvironmentAPIGatewayStageName:
     Type: String
     Description: Environment name used for API Gateway Stage names (injected by Stackery at deployment time)
-  EnvConfigdbPasswordAsString:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /<EnvironmentName>/dbPassword
 Resources:
   Api:
     Type: AWS::Serverless::Api
@@ -36,7 +33,7 @@ Resources:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
-                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AnotherFunction.Arn}/invocations
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${tsFunction.Arn}/invocations
               responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
@@ -76,7 +73,7 @@ Resources:
         - ResourceName: Function
       CodeUri: src/Function
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
@@ -90,18 +87,17 @@ Resources:
             Method: GET
             RestApiId: !Ref Api
       Environment:
-        Variables:
-          DB_PASSWORD: !Ref EnvConfigdbPasswordAsString
-  AnotherFunction:
+        Variables: {}
+  tsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-AnotherFunction
+      FunctionName: !Sub ${AWS::StackName}-tsFunction
       Description: !Sub
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: AnotherFunction
-      CodeUri: src/Function2
+        - ResourceName: tsFunction
+      CodeUri: src/tsFunction
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
@@ -114,11 +110,10 @@ Resources:
             Path: /
             Method: POST
             RestApiId: !Ref Api
+    Metadata:
+      RuntimeOption: typescript
 Conditions:
   ApiCustomDomain: !Not
     - !Equals
       - 'false'
       - domain435683495034.stackery-stacks.io
-Metadata:
-  EnvConfigParameters:
-    EnvConfigdbPasswordAsString: dbPassword
